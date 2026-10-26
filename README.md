@@ -1,26 +1,28 @@
-# My Virtual Library — starter prototype
+# My Virtual Library — redesigned edition
 
-## Included
-- Responsive layout for phone, tablet, and computer
-- Virtual bookshelf, cover gallery, and list views
-- Search saved books by title, author, ISBN, genre, or description
-- Open Library title/author/ISBN search and ISBN metadata lookup
-- Barcode scanning in supported browsers when camera access is available
-- Add, edit, and remove books
-- Four visual themes
-- JSON export and restore/merge backup
+This is a fresh replacement for the first prototype, designed around the reference screenshot supplied by the user.
 
-## Important limitation
-This first prototype stores books in the current browser's local storage. It does **not yet sync across devices**. The next development stage is adding authentication and a cloud database (for example, Supabase). A free cloud tier can be a good start, but has provider quotas; we will not add an app-imposed book-count paywall.
+### Included
+- Dark wood virtual-library room
+- Decorative frame, snow globe and clock treatment
+- Gold "MY COLLECTION" plaque
+- Books rendered as shelf spines
+- Bottom navigation: Reading / Bookshelf / My Books / Journal
+- Collection selector
+- Search by title, author, ISBN, shelf, and notes
+- Add/edit/remove books
+- ISBN lookup through Open Library
+- Barcode scanning where the browser supports BarcodeDetector and camera permission
+- Automatic cover URLs when Open Library supplies a cover
+- Theme settings (Dark Wood, Warm Cream, Midnight, Rosewood)
+- Large-spine and decoration controls
+- JSON backup/export
+- Responsive phone/tablet/desktop layout
 
-## Run locally
-From this folder, run:
+### Storage
+This edition stores books locally in the browser for the first test. It does not yet provide cross-device sync.
 
-```bash
-python3 -m http.server 8080
-```
+The next build stage is cloud sync with a free-tier backend and account sign-in. The app will not impose a book-count paywall. A free cloud provider can still have technical storage/bandwidth quotas, so backups remain important.
 
-Open `http://localhost:8080`. Camera scanning generally needs HTTPS or localhost and a browser that supports `BarcodeDetector`.
-
-## Book data
-Open Library is a third-party catalog. Metadata and covers may be missing or edition-specific, and API availability is outside this app's control.
+### GitHub Pages
+Upload all files to the repository root and publish `main` / `root` through GitHub Pages.

@@ -1,13 +1,130 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#26382f"><title>My Virtual Library</title><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css"></head>
-<body data-theme="forest"><div class="app-shell">
-<header class="topbar"><div class="brand"><div class="brand-mark">✦</div><div><div class="eyebrow">YOUR PERSONAL COLLECTION</div><h1>My Virtual Library</h1></div></div><div class="header-actions"><button class="ghost" id="themeButton">◐ <span>Theme</span></button><button class="primary" id="addButton">＋ <span>Add a book</span></button></div></header>
-<section class="welcome"><div><p class="eyebrow">A LITTLE SPACE FOR EVERY STORY</p><h2>Your books, <em>beautifully</em> at home.</h2><p class="subhead">A growing home for every book you own. Search, collect, and arrange your shelves your way.</p></div><div class="stats"><div><strong id="bookCount">0</strong><span>books in your library</span></div><div><strong id="shelfCount">1</strong><span>personal collection</span></div></div></section>
-<main><section class="toolbar"><div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Search by title, author, or ISBN…"></div><select id="sortSelect" aria-label="Sort books"><option value="added">Recently added</option><option value="title">Title A–Z</option><option value="author">Author A–Z</option><option value="year">Publication year</option></select><button class="secondary" id="findButton">Find a book online</button></section>
-<nav class="tabs"><button class="tab active" data-view="shelf">▥ Bookshelf</button><button class="tab" data-view="grid">▦ Cover gallery</button><button class="tab" data-view="list">☷ List</button></nav>
-<section><div class="shelf-heading"><div><p class="eyebrow">THE COLLECTION</p><h3>My shelves</h3></div><span id="resultCount" class="muted">0 books</span></div><div id="bookArea" class="book-area"></div><div id="emptyState" class="empty-state"><div class="empty-icon">✧</div><h3>Your first shelf is waiting.</h3><p>Add a book by ISBN, search for a title, or enter the details yourself. Your collection will appear here.</p><button class="primary" id="emptyAddButton">＋ Add your first book</button></div></section></main>
-<footer><span>Made for readers, not subscriptions.</span><div><button class="text-button" id="exportButton">Export backup</button><button class="text-button" id="importButton">Restore backup</button><input type="file" id="importFile" accept="application/json" hidden></div></footer></div>
-<dialog id="bookDialog"><form id="bookForm"><div class="dialog-head"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="dialogTitle">Add a book</h2></div><button type="button" class="close" data-close="bookDialog">×</button></div><div class="lookup-row"><input id="isbnLookup" placeholder="Enter ISBN-10 or ISBN-13" inputmode="numeric"><button type="button" class="secondary" id="isbnLookupButton">Look up ISBN</button><button type="button" class="secondary" id="scanButton">▣ Scan barcode</button></div><p class="hint" id="lookupMessage">Book details and cover are filled in when a match is available.</p><div id="scannerBox" hidden><video id="scannerVideo" playsinline></video><p class="hint">Point your camera at the ISBN barcode. Camera access requires HTTPS or localhost.</p><button type="button" class="secondary" id="stopScanButton">Stop scanning</button></div><div class="form-grid"><label class="cover-field">Cover image URL<input id="cover" type="url" placeholder="https://…"><div id="coverPreview" class="cover-preview">Cover preview</div></label><div class="fields"><label>Title *<input id="title" required placeholder="Book title"></label><label>Author<input id="author" placeholder="Author name"></label><div class="two"><label>ISBN<input id="isbn" placeholder="ISBN"></label><label>Publication year<input id="year" type="number" min="0" max="2100" placeholder="2024"></label></div><div class="two"><label>Genre / shelf<input id="genre" placeholder="Fantasy, history…"></label><label>Reading status<select id="status"><option>Owned</option><option>Want to read</option><option>Currently reading</option><option>Finished</option><option>On loan</option></select></label></div><label>Description<textarea id="description" rows="3" placeholder="A note about this book…"></textarea></label></div></div><div class="dialog-actions"><button type="button" class="secondary" data-close="bookDialog">Cancel</button><button type="submit" class="primary">Save book</button></div></form></dialog>
-<dialog id="searchDialog"><div class="dialog-head"><div><p class="eyebrow">OPEN LIBRARY CATALOG</p><h2>Find a book</h2></div><button class="close" data-close="searchDialog">×</button></div><div class="search-online"><input id="onlineQuery" placeholder="Search by title, author, or ISBN…"><button class="primary" id="onlineSearchButton">Search</button></div><p class="hint">Search results come from Open Library. Availability and metadata vary by edition.</p><div id="onlineResults" class="online-results"></div></dialog>
-<dialog id="detailDialog"><div id="detailContent"></div></dialog>
-<dialog id="themeDialog"><div class="dialog-head"><div><p class="eyebrow">MAKE IT YOURS</p><h2>Library themes</h2></div><button class="close" data-close="themeDialog">×</button></div><p class="hint">Choose a look for your library. Your choice is saved on this device.</p><div class="theme-options"><button class="theme-card" data-theme="forest"><span class="swatch forest"></span><b>Forest Reading Room</b><small>Evergreen · parchment · walnut</small></button><button class="theme-card" data-theme="rose"><span class="swatch rose"></span><b>Rosewater Bookshop</b><small>Dusty rose · cream · cocoa</small></button><button class="theme-card" data-theme="midnight"><span class="swatch midnight"></span><b>Midnight Archive</b><small>Ink · brass · plum</small></button><button class="theme-card" data-theme="sunny"><span class="swatch sunny"></span><b>Sunny Paperback</b><small>Marigold · sky · terracotta</small></button></div></dialog><div id="toast" role="status" aria-live="polite"></div><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#20120f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="My Library">
+  <title>My Virtual Library</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="identity">
+        <button class="collection-button" id="collectionButton" aria-label="Choose collection">
+          <span id="collectionName">Self</span><span class="chevron">⌄</span>
+        </button>
+        <div class="subline"><span id="bookCount">0 books</span><span>•</span><span id="waitingCount">0 waiting</span></div>
+      </div>
+      <div class="top-actions">
+        <button class="round-button" id="backupButton" aria-label="Backup library">⇧</button>
+        <button class="round-button" id="viewButton" aria-label="Change view">☷</button>
+        <button class="round-button" id="editButton" aria-label="Edit library">✎</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="room">
+        <div class="decor">
+          <button class="picture-frame" id="frameButton" aria-label="Library decoration">
+            <span class="portrait">♟</span><span class="tiny-badge">⌁</span>
+          </button>
+          <div class="snow-globe" aria-hidden="true"><div class="globe-scene">♜</div><div class="globe-base">✦ ✦ ✦</div></div>
+          <div class="clock" aria-hidden="true"><span class="clock-hand hour"></span><span class="clock-hand minute"></span><span class="clock-center"></span><div class="clock-numbers">12&nbsp;&nbsp;3<br>9&nbsp;&nbsp;&nbsp;6</div></div>
+        </div>
+        <div class="shelf-label">MY COLLECTION</div>
+        <div class="wood-shelf"></div>
+        <div class="wood-shelf lower"></div>
+
+        <section class="bookshelf-section">
+          <div class="bookshelf" id="bookshelf"></div>
+          <div class="empty-message" id="emptyMessage">
+            <h2>Your shelf is waiting.</h2>
+            <p>Add a book to start building your collection.</p>
+            <button class="gold-button" id="emptyAdd">Add a book</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="library-panel" id="panel" hidden>
+        <div class="panel-head">
+          <div><span class="section-kicker" id="panelKicker">MY BOOKS</span><h2 id="panelTitle">My Books</h2></div>
+          <button class="close-panel" id="closePanel">×</button>
+        </div>
+        <div class="search-row">
+          <span>⌕</span><input id="searchInput" type="search" placeholder="Search title, author, or ISBN">
+        </div>
+        <div class="filter-row">
+          <button class="filter active" data-filter="all">All</button>
+          <button class="filter" data-filter="reading">Reading</button>
+          <button class="filter" data-filter="finished">Finished</button>
+          <button class="filter" data-filter="waiting">Want to read</button>
+        </div>
+        <div id="bookList" class="book-list"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="reading"><span class="nav-icon">▱</span><span>Reading</span></button>
+      <button class="nav-item disabled-looking" data-page="bookshelf"><span class="nav-icon">▥</span><span>Bookshelf</span></button>
+      <button class="nav-item" data-page="books"><span class="nav-icon">☷</span><span>My Books</span></button>
+      <button class="nav-item" data-page="journal"><span class="nav-icon">▣</span><span>Journal</span></button>
+    </nav>
+  </div>
+
+  <dialog id="addDialog">
+    <form id="addForm" method="dialog">
+      <div class="dialog-head"><div><span class="section-kicker">YOUR LIBRARY</span><h2 id="formTitle">Add a book</h2></div><button type="button" class="x" data-close="addDialog">×</button></div>
+      <div class="lookup">
+        <input id="isbnLookup" inputmode="numeric" placeholder="ISBN-10 or ISBN-13">
+        <button type="button" class="dark-button" id="lookupButton">Find</button>
+        <button type="button" class="light-button" id="scanButton">Scan ISBN</button>
+      </div>
+      <div id="scanArea" hidden><video id="video" playsinline></video><p>Point the camera at the ISBN barcode.</p><button type="button" class="light-button" id="stopScan">Stop</button></div>
+      <p class="form-note" id="lookupNote">We'll fill in the title, author, year, and cover when available.</p>
+      <div class="form-grid">
+        <label>Title *<input id="title" required></label>
+        <label>Author<input id="author"></label>
+        <label>ISBN<input id="isbn"></label>
+        <label>Publication year<input id="year" inputmode="numeric"></label>
+        <label>Reading status<select id="status"><option value="owned">Owned</option><option value="reading">Currently reading</option><option value="finished">Finished</option><option value="waiting">Want to read</option></select></label>
+        <label>Shelf / genre<input id="genre" placeholder="Fantasy, mystery, favorites…"></label>
+        <label class="full">Cover URL<input id="cover" type="url" placeholder="Filled automatically when available"></label>
+        <label class="full">Notes / description<textarea id="description" rows="4"></textarea></label>
+      </div>
+      <div class="dialog-actions"><button type="button" class="light-button" data-close="addDialog">Cancel</button><button class="dark-button" type="submit">Save book</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="collectionDialog">
+    <div class="dialog-head"><div><span class="section-kicker">COLLECTION</span><h2>Your spaces</h2></div><button class="x" data-close="collectionDialog">×</button></div>
+    <button class="collection-choice active-choice">Self <small>Personal collection</small></button>
+    <button class="collection-choice">Favorites <small>Books you love</small></button>
+    <button class="collection-choice">Want to read <small>Your reading queue</small></button>
+    <button class="collection-choice" id="newCollection">＋ New collection</button>
+  </dialog>
+
+  <dialog id="settingsDialog">
+    <div class="dialog-head"><div><span class="section-kicker">CUSTOMIZE</span><h2>Library settings</h2></div><button class="x" data-close="settingsDialog">×</button></div>
+    <h3>Theme</h3>
+    <div class="theme-grid">
+      <button data-theme="wood">Dark Wood</button>
+      <button data-theme="cream">Warm Cream</button>
+      <button data-theme="midnight">Midnight</button>
+      <button data-theme="rose">Rosewood</button>
+    </div>
+    <h3>Display</h3>
+    <label class="setting-line"><span>Large book spines</span><input id="largeSpines" type="checkbox"></label>
+    <label class="setting-line"><span>Show decorations</span><input id="decorations" type="checkbox" checked></label>
+    <div class="dialog-actions"><button class="light-button" data-close="settingsDialog">Done</button></div>
+  </dialog>
+
+  <dialog id="detailDialog"></dialog>
+  <div id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
